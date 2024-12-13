@@ -1,3 +1,4 @@
+import { argon2d, argon2i, argon2id } from "argon2";
 import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
@@ -42,5 +43,16 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  this.password = await argon2id.hash(this.password);
+  next();
+});
 
+userSchema.methods.matchPassword = async function (password) {
+  const hashPassword = this;
+  return await argon2id.verify(hashPassword.password, password);
+};
 const User = mongoose.model("User", userSchema);
