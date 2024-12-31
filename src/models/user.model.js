@@ -1,4 +1,4 @@
-import { argon2d, argon2i, argon2id } from "argon2";
+import argon2 from "argon2";
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 
@@ -48,13 +48,15 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-  this.password = await argon2id.hash(this.password);
+
+  this.password = await argon2.hash(this.password);
   next();
 });
 
 userSchema.methods.matchPassword = async function (password) {
   const hashPassword = this;
-  return await argon2id.verify(hashPassword.password, password);
+
+  return await argon2.verify(hashPassword.password, password);
 };
 
 userSchema.methods.generateWebToken = async function () {
@@ -87,4 +89,4 @@ userSchema.methods.generateRefreshToken = async function () {
   );
 };
 
-const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
