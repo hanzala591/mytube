@@ -2,7 +2,6 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import { deletingFile } from "./deletingfile.js";
 
-console.log(process.env.CLOUDINARY_API_KEY);
 const uploadOnCloudinary = async (filePath) => {
   try {
     if (!filePath) {

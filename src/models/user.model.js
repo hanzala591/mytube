@@ -48,14 +48,12 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-
   this.password = await argon2.hash(this.password);
   next();
 });
 
 userSchema.methods.matchPassword = async function (password) {
   const hashPassword = this;
-
   return await argon2.verify(hashPassword.password, password);
 };
 
@@ -78,9 +76,6 @@ userSchema.methods.generateRefreshToken = async function () {
   return jwt.sign(
     {
       _id: this._id,
-      username: this.username,
-      email: this.email,
-      fullName: this.fullName,
     },
     process.env.JWT_REFRESH_KEY,
     {

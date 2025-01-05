@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { registeredUser } from "../controllers/user.controller.js";
+import {
+  registeredUser,
+  logInUser,
+  logOutUser,
+} from "../controllers/user.controller.js";
 import upload from "../middlewares/uploadimage.middleware.js";
+import { userverify } from "../middlewares/user.middleware.js";
 const userRouter = Router();
 
-userRouter.route("/register").post(
+userRouter.route("/registeredUser").post(
   upload.fields([
     {
       name: "avatar",
@@ -17,4 +22,7 @@ userRouter.route("/register").post(
   registeredUser
 );
 
+userRouter.route("/logInUser").post(logInUser);
+
+userRouter.route("/logOutUser").post(userverify, logOutUser);
 export default userRouter;
